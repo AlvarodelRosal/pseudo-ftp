@@ -1,5 +1,6 @@
 package alvarodelrosal.ftp.modelo;
 
+import alvarodelrosal.ftp.modelo.FTPActions.FTPBye;
 import alvarodelrosal.ftp.modelo.FTPActions.FTPLoginError;
 import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
 import alvarodelrosal.ftp.modelo.FTPActions.FTPAction;
@@ -82,6 +83,9 @@ public class FTPConnection extends Thread {
                 }
                 inputRequest = input.readLine();
             }
+            
+            FTPBye bye = new FTPBye();
+            bye.doAction(output,"");
             
         } catch (IOException e) {
             e.printStackTrace();
