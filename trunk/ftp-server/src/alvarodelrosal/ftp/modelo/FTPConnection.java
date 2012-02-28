@@ -4,6 +4,7 @@ import alvarodelrosal.ftp.modelo.FTPActions.FTPLoginError;
 import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
 import alvarodelrosal.ftp.modelo.FTPActions.FTPAction;
 import alvarodelrosal.ftp.modelo.FTPActions.FTPActionsFactory;
+import alvarodelrosal.ftp.modelo.FTPActions.FTPLoginSuccess;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,6 +17,8 @@ public class FTPConnection extends Thread {
     private Socket client;
     private PrintWriter output;
     private BufferedReader input;
+    
+    private FTPUser user = null;
 
     public FTPConnection(Socket client) {
         this.client = client;
@@ -53,16 +56,31 @@ public class FTPConnection extends Thread {
             FTPActionsFactory inputFactory = new FTPActionsFactory();
             FTPUsersRepository usersRepository = new FTPUsersRepository();
 
-            String username = getUsernameFrom(inputRequest);
-            String password = getPasswordFrom(inputRequest);
-            String command = getCommandFrom(inputRequest);
+            while (continueActive(inputRequest)) {
 
-            if (usersRepository.exists(username, password)) {
-                FTPAction action = inputFactory.get(command);
-                action.doAction(output, inputRequest);
-            } else {
-                FTPLoginError error = new FTPLoginError();
-                error.doAction(output, "");
+                String command = getCommandFrom(inputRequest);
+                String parameters = getParametersFrom(inputRequest);
+
+                if (isTheUserLoggedIn()) {
+                    FTPAction action = inputFactory.get(command);
+                    action.doAction(output, parameters);
+                } else {
+                    String username = command;
+                    String password = parameters;
+                    
+                    if (usersRepository.exists(username, password)) {
+                        user = usersRepository.get(username, password);
+                        
+                        String userData = buildUserDataString();
+                        
+                        FTPLoginSuccess success = new FTPLoginSuccess();
+                        success.doAction(output,userData);
+                    } else {
+                        FTPLoginError error = new FTPLoginError();
+                        error.doAction(output, "");
+                    }
+                }
+                inputRequest = input.readLine();
             }
             
         } catch (IOException e) {
@@ -81,18 +99,27 @@ public class FTPConnection extends Thread {
         }
     }
 
-    private String getUsernameFrom(String inputRequest) {
-        String[] requests = inputRequest.split(TOKEN);
-        return requests[0];
+    private String buildUserDataString() {
+        String userData = user.getName();
+        if(user.isIsAdmin()) {
+            userData += "isAdmin"; 
+        }
+        return userData;
     }
 
-    private String getPasswordFrom(String inputRequest) {
-        String[] requests = inputRequest.split(TOKEN);
-        return requests[1];
+    private boolean continueActive(String inputRequest) {
+        return !"bye".equals(inputRequest);
     }
 
     private String getCommandFrom(String inputRequest) {
-        String[] requests = inputRequest.split(TOKEN);
-        return requests[2];
+        return inputRequest.substring(0,inputRequest.indexOf(TOKEN));
+    }
+
+    private String getParametersFrom(String inputRequest) {
+        return inputRequest.substring(inputRequest.indexOf(TOKEN)+TOKEN.length(),inputRequest.length());
+    }
+
+    private boolean isTheUserLoggedIn() {
+        return user != null;
     }
 }
