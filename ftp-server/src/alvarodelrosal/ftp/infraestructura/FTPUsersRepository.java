@@ -10,7 +10,7 @@ public class FTPUsersRepository {
         if(users.existsTheUser(username, password)) {
             return users.getTheUser(username, password);
         } else {
-            return null;
+            throw new IllegalArgumentException("El usuario no existe");
         }
     }
     

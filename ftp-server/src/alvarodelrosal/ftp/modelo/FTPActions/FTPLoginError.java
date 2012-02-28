@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 public class FTPLoginError implements FTPAction{
     @Override
     public String getName() {
-        return "Login";
+        return "Login Error";
     }
 
     @Override

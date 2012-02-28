@@ -2,16 +2,14 @@ package alvarodelrosal.ftp.modelo.FTPActions;
 
 import java.io.PrintWriter;
 
-public class FTPHello implements FTPAction{
-
+public class FTPLoginSuccess implements FTPAction{
     @Override
     public String getName() {
-        return "Hello";
+        return "LoginSuccess";
     }
 
     @Override
     public void doAction(PrintWriter output, String parameters) {
-        output.println("Eh... What's up, doc?" + parameters);
+        output.println("Welcome!");
     }
-
 }
