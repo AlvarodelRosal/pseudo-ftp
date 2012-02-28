@@ -1,11 +1,7 @@
 package alvarodelrosal.ftp.modelo;
 
-import alvarodelrosal.ftp.modelo.FTPActions.FTPBye;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPLoginError;
 import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPAction;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPActionsFactory;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPLoginSuccess;
+import alvarodelrosal.ftp.modelo.FTPActions.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
