@@ -63,23 +63,9 @@ public class FTPConnection extends Thread {
                 String parameters = getParametersFrom(inputRequest);
 
                 if (isTheUserLoggedIn()) {
-                    FTPAction action = inputFactory.get(command);
-                    action.doAction(output, parameters);
+                    launcAction(inputFactory, command, parameters);
                 } else {
-                    String username = command;
-                    String password = parameters;
-                    
-                    if (usersRepository.exists(username, password)) {
-                        user = usersRepository.get(username, password);
-                        
-                        String userData = buildUserDataString();
-                        
-                        FTPLoginSuccess success = new FTPLoginSuccess();
-                        success.doAction(output,userData);
-                    } else {
-                        FTPLoginError error = new FTPLoginError();
-                        error.doAction(output, "");
-                    }
+                    loginUserIfExists(command, parameters, usersRepository);
                 }
                 inputRequest = input.readLine();
             }
@@ -101,6 +87,39 @@ public class FTPConnection extends Thread {
                 }
             }
         }
+    }
+
+    private void loginUserIfExists(String command, String parameters, FTPUsersRepository usersRepository) {
+        String username = command;
+        String password = parameters;
+        
+        if (usersRepository.exists(username, password)) {
+            validatesUser(usersRepository, username, password);
+        } else {
+            launchError();
+        }
+    }
+
+    private void validatesUser(FTPUsersRepository usersRepository, String username, String password) {
+        user = usersRepository.get(username, password);
+        
+        String userData = buildUserDataString();
+        launchOk(userData);
+    }
+
+    private void launchOk(String userData) {
+        FTPLoginSuccess success = new FTPLoginSuccess();
+        success.doAction(output,userData);
+    }
+
+    private void launchError() {
+        FTPLoginError error = new FTPLoginError();
+        error.doAction(output, "");
+    }
+
+    private void launcAction(FTPActionsFactory inputFactory, String command, String parameters) {
+        FTPAction action = inputFactory.get(command);
+        action.doAction(output, parameters);
     }
 
     private String buildUserDataString() {
