@@ -54,20 +54,9 @@ public class FTPConnection extends Thread {
             FTPUsersRepository usersRepository = new FTPUsersRepository();
 
             while (continueActive(inputRequest)) {
-
-                String command = getCommandFrom(inputRequest);
-                String parameters = getParametersFrom(inputRequest);
-
-                if (isTheUserLoggedIn()) {
-                    launcAction(inputFactory, command, parameters);
-                } else {
-                    loginUserIfExists(command, parameters, usersRepository);
-                }
-                inputRequest = input.readLine();
+                inputRequest = executeCommands(inputRequest, inputFactory, usersRepository);
             }
-            
-            FTPBye bye = new FTPBye();
-            bye.doAction(output,"");
+            saysBye();
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,6 +72,23 @@ public class FTPConnection extends Thread {
                 }
             }
         }
+    }
+
+    private void saysBye() {
+        FTPBye bye = new FTPBye();
+        bye.doAction(output,"");
+    }
+
+    private String executeCommands(String inputRequest, FTPActionsFactory inputFactory, FTPUsersRepository usersRepository) throws IOException {
+        String command = getCommandFrom(inputRequest);
+        String parameters = getParametersFrom(inputRequest);
+        if (isTheUserLoggedIn()) {
+            launcAction(inputFactory, command, parameters);
+        } else {
+            loginUserIfExists(command, parameters, usersRepository);
+        }
+        inputRequest = input.readLine();
+        return inputRequest;
     }
 
     private void loginUserIfExists(String command, String parameters, FTPUsersRepository usersRepository) {
