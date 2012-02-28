@@ -2,7 +2,7 @@ package alvarodelrosal.ftp.modelo.FTPActions;
 
 import java.io.PrintWriter;
 
-public class Oops implements FTPAction {
+public class FTPOops implements FTPAction {
 
     @Override
     public String getName() {

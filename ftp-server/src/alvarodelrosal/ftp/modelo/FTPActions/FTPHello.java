@@ -11,7 +11,7 @@ public class FTPHello implements FTPAction{
 
     @Override
     public void doAction(PrintWriter output, String parameters) {
-        output.println("Eh... What's up, doc?" + parameters);
+        output.println("Eh... What's up, doc?<:@:>" + parameters);
     }
 
 }

@@ -9,6 +9,7 @@ public class FTPActionsFactory {
 
     public FTPActionsFactory() {
         actions.add(new FTPHello());
+        actions.add(new FTPLook());
     }
     
     public FTPAction get(String name) {
@@ -17,7 +18,7 @@ public class FTPActionsFactory {
                 return action;
             }
         }
-        return new Oops();
+        return new FTPOops();
     }
     
 }
