@@ -1,6 +1,7 @@
 package alvarodelrosal.ftp.modelo.FTPActions;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
 public class FTPLook implements FTPAction {
@@ -11,6 +12,7 @@ public class FTPLook implements FTPAction {
     }
 
     @Override
+    //public void doAction(FileOutputStream output, String parameters) {
     public void doAction(PrintWriter output, String parameters) {
         StringBuilder pathBuilder = new StringBuilder(parameters);
         
