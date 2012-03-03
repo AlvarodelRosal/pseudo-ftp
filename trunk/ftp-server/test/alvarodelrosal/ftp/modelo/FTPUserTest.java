@@ -1,63 +1,69 @@
 package alvarodelrosal.ftp.modelo;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class FTPUserTest {
     
     @Test
-    public void savesTheData() {
-        FTPUser user = new FTPUser("Alvaro", "adr", "123456", false);
+    public void savesTheCorrectData() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
         assertEquals("Alvaro", user.getName());
-        assertEquals(false, user.isIsAdmin());
-        assertEquals(true, user.checkUserAndPassword("adr", "123456"));
+        assertEquals(true, user.is("adr", "123456"));
+        assertEquals(true, user.isAdmin());
     }
     
     @Test
-    public void ifUserAndPasswordAreDifferentSaysIt() {
-        FTPUser user = new FTPUser("Alvaro", "adr", "123456", false);
-        assertEquals(false, user.checkUserAndPassword("Alvaro", "Alvaro"));
+    public void ifUsernameIsIncorrectReturnsALoginError() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        assertEquals(false, user.is("pepe", "123456"));
     }
     
     @Test
-    public void theUserIsEqualToItselve() {
-        FTPUser user = new FTPUser("Alvaro", "adr", "123456", false);
-        assertEquals(true, user.equals(user));
+    public void ifPasswordIsIncorrectReturnsALoginError() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        assertEquals(false, user.is("adr", "qwerty"));
+    }
+    
+    @Test
+    public void ifBothAreIncorrectReturnsALoginError() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        assertEquals(false, user.is("pepe", "qwerty"));
     }
     
     @Test
     public void twoUsersWithTheSameDataAreEquals() {
-        FTPUser user1 = new FTPUser("Alvaro", "adr", "123456", false);
-        FTPUser user2 = new FTPUser("Alvaro", "adr", "123456", false);
-        assertEquals(true, user1.equals(user2));
-    }
-    
-    @Test
-    public void twoUsersWithDifferentNameAreNotEquals() {
-        FTPUser user1 = new FTPUser("Alvaro", "adr", "123456", false);
-        FTPUser user2 = new FTPUser("Paco", "adr", "123456", false);
-        assertEquals(false, user1.equals(user2));
-    }
-    
-    @Test
-    public void twoUsersWithDifferentUsernameAreNotEquals() {
-        FTPUser user1 = new FTPUser("Alvaro", "adr", "123456", false);
-        FTPUser user2 = new FTPUser("Alvaro", "Paco", "123456", false);
-        assertEquals(false, user1.equals(user2));
-    }
-    
-    @Test
-    public void twoUsersWithDifferentPasswordAreNotEquals() {
-        FTPUser user1 = new FTPUser("Alvaro", "adr", "123456", false);
-        FTPUser user2 = new FTPUser("Alvaro", "adr", "goal", false);
-        assertEquals(false, user1.equals(user2));
-    }
-    
-    @Test
-    public void twoUsersWithDifferentAdminLevelsAreNotEquals() {
-        FTPUser user1 = new FTPUser("Alvaro", "adr", "123456", false);
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
         FTPUser user2 = new FTPUser("Alvaro", "adr", "123456", true);
-        assertEquals(false, user1.equals(user2));
+        assertEquals(true, user.equals(user2));
+    }
+    
+    @Test
+    public void twoUsersWithDiferentNameAreNotEquals() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        FTPUser user2 = new FTPUser("Pepe", "adr", "123456", true);
+        assertEquals(false, user.equals(user2));
+    }
+    
+    @Test
+    public void twoUsersWithDiferentUsernameNotEquals() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        FTPUser user2 = new FTPUser("Alvaro", "alvaro", "123456", true);
+        assertEquals(false, user.equals(user2));
+    }
+    
+    @Test
+    public void twoUsersWithDiferentPasswordNotEquals() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        FTPUser user2 = new FTPUser("Alvaro", "adr", "qwerty", true);
+        assertEquals(false, user.equals(user2));
+    }
+    
+    @Test
+    public void twoUsersWithDiferentUserLevelAreNotEquals() {
+        FTPUser user = new FTPUser("Alvaro", "adr", "123456", true);
+        FTPUser user2 = new FTPUser("Alvaro", "adr", "123456", false);
+        assertEquals(false, user.equals(user2));
     }
     
 }
