@@ -57,7 +57,7 @@ public class FTPConnection extends Thread {
             FTPUsersRepository usersRepository = new FTPUsersRepository();
             FTPBye bye = new FTPBye();
 
-            while (!bye.getName().equals(inputRequest)) {
+            while (mustKeepsExecuting(bye, inputRequest)) {
                 String command = getsTheCommand(inputRequest);
                 List<String> parameters = getsTheParameters(inputRequest);
                 
@@ -74,6 +74,10 @@ public class FTPConnection extends Thread {
         } finally {
             closesALLTheConnections();
         }
+    }
+
+    private boolean mustKeepsExecuting(FTPBye bye, String inputRequest) {
+        return !bye.getName().equals(inputRequest);
     }
 
     private void closesALLTheConnections() {
