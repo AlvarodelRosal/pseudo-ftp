@@ -1,12 +1,7 @@
 package alvarodelrosal.ftp.modelo;
 
-import alvarodelrosal.ftp.modelo.FTPActions.FTPPrivilegesError;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPBye;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPLoginError;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPActionsFactory;
 import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPAction;
-import alvarodelrosal.ftp.modelo.FTPActions.FTPHello;
+import alvarodelrosal.ftp.modelo.FTPActions.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,30 +61,7 @@ public class FTPConnection extends Thread {
                 String command = getsTheCommand(inputRequest);
                 List<String> parameters = getsTheParameters(inputRequest);
                 
-                if (ftpUser != null) {
-                    FTPAction action = inputFactory.getFTPAction(command);
-                    if (action.needsAdminPrivileges()) {
-                        if (ftpUser.isAdmin()) {
-                            output.println(action.doAction(parameters));
-                        } else {
-                            FTPPrivilegesError error = new FTPPrivilegesError();
-                            output.println(error.doAction(new ArrayList()));
-                        }
-                    } else {
-                        output.println(action.doAction(parameters));
-                    }
-                } else {
-                    String username = getsThePosition(inputRequest,0);
-                    String password = getsThePosition(inputRequest,1);
-                    
-                    if (usersRepository.exists(username, password)) {
-                        this.ftpUser = usersRepository.getUser(username, password);
-                        FTPHello hello = new FTPHello();
-                        output.println(hello.doAction(new ArrayList()));
-                    } else {
-                        sendsALoginError();
-                    }
-                }
+                logsInTheUserOrExecutesTheAction(inputFactory, command, parameters, inputRequest, usersRepository);
                 
                 inputRequest = input.readLine();
             }
@@ -100,17 +72,80 @@ public class FTPConnection extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            output.close();
+            closesALLTheConnections();
+        }
+    }
+
+    private void closesALLTheConnections() {
+        output.close();
+        try {
+            input.close();
+        } catch (IOException ex1) {
+        } finally {
             try {
-                input.close();
+                client.close();
             } catch (IOException ex1) {
-            } finally {
-                try {
-                    client.close();
-                } catch (IOException ex1) {
-                }
             }
         }
+    }
+
+    private void logsInTheUserOrExecutesTheAction(FTPActionsFactory inputFactory, String command, List<String> parameters, String inputRequest, FTPUsersRepository usersRepository) {
+        if (userIsLogedIn()) {
+            doActionIfPrivileged(inputFactory, command, parameters);
+        } else {
+            tryToLoginOrGeneratesError(inputRequest, usersRepository);
+        }
+    }
+
+    private void doActionIfPrivileged(FTPActionsFactory inputFactory, String command, List<String> parameters) {
+        FTPAction action = inputFactory.getFTPAction(command);
+        if (needsAdminPrivileges(action)) {
+            executesTheActionOrSendsError(action, parameters);
+        } else {
+            doTheAction(action, parameters);
+        }
+    }
+
+    private void tryToLoginOrGeneratesError(String inputRequest, FTPUsersRepository usersRepository) {
+        String username = getsThePosition(inputRequest,0);
+        String password = getsThePosition(inputRequest,1);
+        
+        if (usersRepository.exists(username, password)) {
+            logsInTheUser(usersRepository, username, password);
+        } else {
+            sendsALoginError();
+        }
+    }
+
+    private void logsInTheUser(FTPUsersRepository usersRepository, String username, String password) {
+        this.ftpUser = usersRepository.getUser(username, password);
+        FTPHello hello = new FTPHello();
+        output.println(hello.doAction(new ArrayList()));
+    }
+
+    private void doTheAction(FTPAction action, List<String> parameters) {
+        output.println(action.doAction(parameters));
+    }
+
+    private void executesTheActionOrSendsError(FTPAction action, List<String> parameters) {
+        if (ftpUser.isAdmin()) {
+            doTheAction(action, parameters);
+        } else {
+            showsPrivilegesError();
+        }
+    }
+
+    private void showsPrivilegesError() {
+        FTPPrivilegesError error = new FTPPrivilegesError();
+        output.println(error.doAction(new ArrayList()));
+    }
+
+    private boolean needsAdminPrivileges(FTPAction action) {
+        return action.needsAdminPrivileges();
+    }
+
+    private boolean userIsLogedIn() {
+        return ftpUser != null;
     }
 
     private void sendsALoginError() {
