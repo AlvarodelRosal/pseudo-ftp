@@ -11,7 +11,7 @@ public class FTPUsersMemoryPersistence implements FTPUsersPersistence{
     public FTPUsersMemoryPersistence() {
         users.add(new FTPUser("Alvaro", "adr", "123456", true));
         users.add(new FTPUser("Admin", "admin", "admin", true));
-        users.add(new FTPUser("User", "user", "user", true));
+        users.add(new FTPUser("User", "user", "user", false));
     }
 
     @Override

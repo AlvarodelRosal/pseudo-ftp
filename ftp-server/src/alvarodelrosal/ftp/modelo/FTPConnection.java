@@ -66,7 +66,6 @@ public class FTPConnection extends Thread {
                 inputRequest = input.readLine();
             }
             
-            
             output.println(bye.doAction(new ArrayList()));
             
         } catch (IOException e) {
@@ -123,8 +122,13 @@ public class FTPConnection extends Thread {
 
     private void logsInTheUser(FTPUsersRepository usersRepository, String username, String password) {
         this.ftpUser = usersRepository.getUser(username, password);
-        FTPHello hello = new FTPHello();
-        output.println(hello.doAction(new ArrayList()));
+        FTPLogin login = new FTPLogin();
+        
+        ArrayList<String> loginData = new ArrayList();
+        loginData.add(this.ftpUser.getName());
+        loginData.add(String.valueOf(this.ftpUser.isAdmin()));
+        
+        output.println(login.doAction(loginData));
     }
 
     private void doTheAction(FTPAction action, List<String> parameters) {
