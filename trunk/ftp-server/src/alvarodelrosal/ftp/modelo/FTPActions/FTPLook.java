@@ -28,7 +28,7 @@ public class FTPLook implements FTPAction {
                 pathBuilder.append("<:@:>");
                 pathBuilder.append(subpath);
             }
-            return pathBuilder.toString();
+            return pathBuilder.toString().substring(5);
         } else {
             return "This is not a folder";
         }
