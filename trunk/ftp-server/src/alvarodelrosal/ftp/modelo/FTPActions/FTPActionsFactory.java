@@ -30,5 +30,6 @@ public class FTPActionsFactory {
         actions.add(new FTPSize());
         actions.add(new FTPIsFolder());
         actions.add(new FTPIsFile());
+        actions.add(new FTPNewFolder());
     }
 }
