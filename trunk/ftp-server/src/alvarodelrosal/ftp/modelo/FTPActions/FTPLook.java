@@ -20,7 +20,7 @@ public class FTPLook implements FTPAction {
         String pathName = parameters.get(0);
         File path = new File(pathName);
 
-        StringBuilder pathBuilder = new StringBuilder(path.getAbsolutePath());
+        StringBuilder pathBuilder = new StringBuilder();
         if (path.isDirectory()) {
             String[] content = path.list();
             
