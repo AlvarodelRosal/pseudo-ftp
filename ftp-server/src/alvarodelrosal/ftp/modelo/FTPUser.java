@@ -22,6 +22,10 @@ public class FTPUser {
         return name;
     }
     
+    public String getUsername() {
+        return username;
+    }
+    
     public boolean is(String username, String password) {
         return (this.username == null ? username == null : this.username.equals(username)) &&
                 (this.password == null ? password == null : this.password.equals(password));
