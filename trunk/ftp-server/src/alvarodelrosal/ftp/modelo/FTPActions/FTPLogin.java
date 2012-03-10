@@ -16,7 +16,7 @@ public class FTPLogin implements FTPAction {
 
     @Override
     public String doAction(List<String> parameters) {
-        return parameters.get(0) + "<:@:>" + parameters.get(1);
+        return parameters.get(0) + "<:@:>" + parameters.get(1)+ "<:@:>" + parameters.get(2);
     }
 
 }

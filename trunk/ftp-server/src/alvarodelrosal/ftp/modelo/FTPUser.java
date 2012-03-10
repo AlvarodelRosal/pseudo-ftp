@@ -64,6 +64,10 @@ public class FTPUser {
         hash = 89 * hash + (this.isAdmin ? 1 : 0);
         return hash;
     }
+
+    public String getPassword() {
+        return password;
+    }
     
     
     

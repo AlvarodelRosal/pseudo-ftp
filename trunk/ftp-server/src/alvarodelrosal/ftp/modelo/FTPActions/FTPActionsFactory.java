@@ -1,11 +1,12 @@
 package alvarodelrosal.ftp.modelo.FTPActions;
 
+import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FTPActionsFactory {
     
-    List<FTPAction> actions = new ArrayList();
+    private List<FTPAction> actions = new ArrayList();
     
     public FTPActionsFactory() {
         addsAllTheActions();
@@ -21,9 +22,11 @@ public class FTPActionsFactory {
     }
     
     private void addsAllTheActions() {
+        actions.add(new FTPAddUser());
         actions.add(new FTPCanRead());
         actions.add(new FTPCanWrite());
         actions.add(new FTPDelete());
+        actions.add(new FTPDeleteUser());
         actions.add(new FTPHello());
         actions.add(new FTPIsFile());
         actions.add(new FTPIsFolder());
@@ -32,5 +35,6 @@ public class FTPActionsFactory {
         actions.add(new FTPLook());
         actions.add(new FTPNewFolder());
         actions.add(new FTPSize());
+        actions.add(new FTPUsers());
     }
 }
