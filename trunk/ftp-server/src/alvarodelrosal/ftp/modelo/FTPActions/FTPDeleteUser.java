@@ -22,7 +22,9 @@ public class FTPDeleteUser implements FTPAction {
 
     @Override
     public String doAction(List<String> parameters) {
+        ftpUsersRepository.update();
         ftpUsersRepository.deleteUser(parameters.get(0), parameters.get(1));
+        ftpUsersRepository.update();
         return " ";
     }
 
