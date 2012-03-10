@@ -27,4 +27,9 @@ public class FTPUsersRepository {
         return users.getAllUsers();
     }
     
+    public void update() {
+        users = null;
+        users = new FTPUsersFilePersistence();
+    }
+    
 }

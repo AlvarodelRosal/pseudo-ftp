@@ -23,9 +23,11 @@ public class FTPAddUser implements FTPAction {
 
     @Override
     public String doAction(List<String> parameters) {
+        ftpUsersRepository.update();
         FTPUser user = new FTPUser(parameters.get(0), parameters.get(1),
                 parameters.get(2), Boolean.parseBoolean(parameters.get(3)));
         ftpUsersRepository.addUser(user);
+        ftpUsersRepository.update();
         return " ";
     }
 
