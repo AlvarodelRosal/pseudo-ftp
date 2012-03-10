@@ -1,10 +1,11 @@
 package alvarodelrosal.ftp.infraestructura;
 
 import alvarodelrosal.ftp.modelo.FTPUser;
+import java.util.List;
 
 public class FTPUsersRepository {
     
-    FTPUsersMemoryPersistence users = new FTPUsersMemoryPersistence();
+    private FTPUsersFilePersistence users = new FTPUsersFilePersistence();
     
     public boolean exists(String username, String password) {
         return users.existsTheUser(username, password);
@@ -18,8 +19,12 @@ public class FTPUsersRepository {
         users.addUser(user);
     }
     
-    public void deleteUser(FTPUser user) {
-        users.deleteUser(user);
+    public void deleteUser(String name, String username) {
+        users.deleteUser(name, username);
+    }
+    
+    public List<FTPUser> getAllUsers() {
+        return users.getAllUsers();
     }
     
 }

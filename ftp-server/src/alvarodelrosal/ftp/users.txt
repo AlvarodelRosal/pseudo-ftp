@@ -1,0 +1,3 @@
+Alvaro<:@:>adr<:@:>123456<:@:>true
+Admin<:@:>admin<:@:>admin<:@:>true
+User<:@:>user<:@:>user<:@:>false

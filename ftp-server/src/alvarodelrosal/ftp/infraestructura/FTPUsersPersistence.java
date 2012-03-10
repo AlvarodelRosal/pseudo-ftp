@@ -9,6 +9,6 @@ public interface FTPUsersPersistence {
     public boolean existsTheUser(String username, String password);
     public FTPUser getTheUser(String username, String password);
     public void addUser(FTPUser user);
-    public void deleteUser(FTPUser user);
+    public void deleteUser(String name, String username);
     
 }

@@ -1,5 +1,6 @@
 package alvarodelrosal.ftp.modelo;
 
+import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,6 +12,8 @@ public class FTPServer {
 
     public static void main(String args[]) throws IOException {
         Socket client = null;
+        
+        FTPUsersRepository repository = new FTPUsersRepository();
         
         try {
             ServerSocket server = new ServerSocket(9999);

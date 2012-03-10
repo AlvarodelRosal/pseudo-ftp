@@ -17,12 +17,13 @@ public class FTPConnection extends Thread {
     private Socket client;
     private PrintWriter output;
     private BufferedReader input;
+    private FTPUsersRepository usersRepository = new FTPUsersRepository();
 
     private FTPUser ftpUser = null;
 
     public FTPConnection(Socket client) {
         this.client = client;
-
+        
         try {
             input = new BufferedReader(
                     new InputStreamReader(client.getInputStream()));
@@ -54,7 +55,7 @@ public class FTPConnection extends Thread {
             String inputRequest = input.readLine();
 
             FTPActionsFactory inputFactory = new FTPActionsFactory();
-            FTPUsersRepository usersRepository = new FTPUsersRepository();
+            
             FTPBye bye = new FTPBye();
 
             while (mustKeepsExecuting(bye, inputRequest)) {
@@ -126,6 +127,7 @@ public class FTPConnection extends Thread {
         
         ArrayList<String> loginData = new ArrayList();
         loginData.add(this.ftpUser.getName());
+        loginData.add(this.ftpUser.getUsername());
         loginData.add(String.valueOf(this.ftpUser.isAdmin()));
         
         output.println(login.doAction(loginData));

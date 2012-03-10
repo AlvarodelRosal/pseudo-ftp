@@ -36,7 +36,7 @@ public class FTPUsersMemoryPersistence implements FTPUsersPersistence{
                 return user;
             }
         }
-        throw new IllegalArgumentException("the user doesn't existis");
+        throw new IllegalArgumentException("The user doesn't exists");
     }
 
     @Override
@@ -45,8 +45,20 @@ public class FTPUsersMemoryPersistence implements FTPUsersPersistence{
     }
 
     @Override
-    public void deleteUser(FTPUser user) {
-        users.remove(user);
+    public void deleteUser(String name, String username) {
+        FTPUser user = selectTheUser(name, username);
+        if (user != null) {
+            users.remove(user);
+        }
     }
-    
+
+    private FTPUser selectTheUser(String name, String username) {
+        for(FTPUser user : users) {
+            if((user.getName() == null ? name == null : user.getName().equals(name))
+                    && (user.getUsername() == null ? username == null : user.getUsername().equals(username))) {
+                return user;
+            }
+        }
+        return null;
+    }
 }
