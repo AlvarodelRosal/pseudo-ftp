@@ -12,18 +12,16 @@ import java.util.List;
 
 public class FTPConnection extends Thread {
 
-    
     public static final String TOKEN = "<:@:>";
     private Socket client;
     private PrintWriter output;
     private BufferedReader input;
     private FTPUsersRepository usersRepository = new FTPUsersRepository();
-
     private FTPUser ftpUser = null;
 
     public FTPConnection(Socket client) {
         this.client = client;
-        
+
         try {
             input = new BufferedReader(
                     new InputStreamReader(client.getInputStream()));
@@ -55,25 +53,40 @@ public class FTPConnection extends Thread {
             String inputRequest = input.readLine();
 
             FTPActionsFactory inputFactory = new FTPActionsFactory();
-            
+
             FTPBye bye = new FTPBye();
 
             while (mustKeepsExecuting(bye, inputRequest)) {
-                String command = getsTheCommand(inputRequest);
-                List<String> parameters = getsTheParameters(inputRequest);
-                
-                logsInTheUserOrExecutesTheAction(inputFactory, command, parameters, inputRequest, usersRepository);
-                
-                inputRequest = input.readLine();
+                if (clientIsDeath(inputRequest)) {
+                    closeTheConnection();
+                    return;
+                } else {
+                    String command = getsTheCommand(inputRequest);
+                    inputRequest = readsInput(inputRequest, inputFactory, command);
+                }
             }
-            
             output.println(bye.doAction(new ArrayList()));
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             closesALLTheConnections();
         }
+    }
+
+    private String readsInput(String inputRequest, FTPActionsFactory inputFactory, String command) throws IOException {
+        List<String> parameters = getsTheParameters(inputRequest);
+        logsInTheUserOrExecutesTheAction(inputFactory, command, parameters, inputRequest, usersRepository);
+        inputRequest = input.readLine();
+        return inputRequest;
+    }
+
+    private void closeTheConnection() {
+        return;
+    }
+
+    private boolean clientIsDeath(String command) {
+        return command == null;
     }
 
     private boolean mustKeepsExecuting(FTPBye bye, String inputRequest) {
@@ -111,9 +124,9 @@ public class FTPConnection extends Thread {
     }
 
     private void tryToLoginOrGeneratesError(String inputRequest, FTPUsersRepository usersRepository) {
-        String username = getsThePosition(inputRequest,0);
-        String password = getsThePosition(inputRequest,1);
-        
+        String username = getsThePosition(inputRequest, 0);
+        String password = getsThePosition(inputRequest, 1);
+
         if (usersRepository.exists(username, password)) {
             logsInTheUser(usersRepository, username, password);
         } else {
@@ -124,12 +137,12 @@ public class FTPConnection extends Thread {
     private void logsInTheUser(FTPUsersRepository usersRepository, String username, String password) {
         this.ftpUser = usersRepository.getUser(username, password);
         FTPLogin login = new FTPLogin();
-        
+
         ArrayList<String> loginData = new ArrayList();
         loginData.add(this.ftpUser.getName());
         loginData.add(this.ftpUser.getUsername());
         loginData.add(String.valueOf(this.ftpUser.isAdmin()));
-        
+
         output.println(login.doAction(loginData));
     }
 
@@ -166,19 +179,19 @@ public class FTPConnection extends Thread {
     private String getsThePosition(String inputRequest, int position) {
         return inputRequest.split(TOKEN)[position];
     }
-    
+
     private String getsTheCommand(String inputRequest) {
         return getsThePosition(inputRequest, 0);
-        
+
     }
 
     private List<String> getsTheParameters(String inputRequest) {
         List<String> parameters = new ArrayList();
         String[] parametersArray = inputRequest.split(TOKEN);
-        for(int position = 1; position < parametersArray.length; position++) {
+        for (int position = 1; position < parametersArray.length; position++) {
             parameters.add(parametersArray[position]);
         }
         return parameters;
-        
+
     }
 }
