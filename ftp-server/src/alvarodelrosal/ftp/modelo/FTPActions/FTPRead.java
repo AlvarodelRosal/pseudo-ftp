@@ -23,29 +23,30 @@ public class FTPRead implements FTPAction {
         String path = parameters.get(0);
         int part = Integer.parseInt(parameters.get(1));
         FileInputStream fileReader = null;
+        
         try {
-             fileReader = new FileInputStream(new File(path));
+            fileReader = new FileInputStream(new File(path));
         } catch (FileNotFoundException ex) {
             return "File does not exists";
         }
-        
+
         StringBuilder fileBuilder = new StringBuilder();
-        byte[] filePart = null;
+        byte[] filePart = new byte[1000];
+
         try {
             fileReader.read(filePart, 1000 * part, 999);
         } catch (IOException ex) {
         }
-        
-        for(byte fileByte : filePart) {
+
+        for (byte fileByte : filePart) {
             fileBuilder.append(fileByte);
         }
-        
+
         try {
             fileReader.close();
         } catch (IOException ex) {
         }
-        
+
         return fileBuilder.toString();
     }
-    
 }
