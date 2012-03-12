@@ -34,6 +34,7 @@ public class FTPActionsFactory {
         actions.add(new FTPLastModified());
         actions.add(new FTPLook());
         actions.add(new FTPNewFolder());
+        actions.add(new FTPRead());
         actions.add(new FTPSize());
         actions.add(new FTPUsers());
     }
