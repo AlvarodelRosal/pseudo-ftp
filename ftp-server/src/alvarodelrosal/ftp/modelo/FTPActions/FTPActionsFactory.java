@@ -37,5 +37,6 @@ public class FTPActionsFactory {
         actions.add(new FTPRead());
         actions.add(new FTPSize());
         actions.add(new FTPUsers());
+        actions.add(new FTPWrite());
     }
 }
