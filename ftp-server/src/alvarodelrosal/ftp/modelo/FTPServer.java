@@ -13,8 +13,6 @@ public class FTPServer {
     public static void main(String args[]) throws IOException {
         Socket client = null;
         
-        FTPUsersRepository repository = new FTPUsersRepository();
-        
         try {
             ServerSocket server = new ServerSocket(9999);
             server.setSoTimeout(3000);
