@@ -1,26 +1,34 @@
 package alvarodelrosal.ftp.modelo.FTPActions;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FTPWrite implements FTPAction {
+public class FTPNotAdminWrite implements FTPAction {
 
+    private String inbox;
+
+    public FTPNotAdminWrite(String inbox) {
+        this.inbox = inbox;
+    }
+    
     @Override
     public String getName() {
-        return "Write";
+        return "NotAdminWrite";
     }
 
     @Override
     public boolean needsAdminPrivileges() {
-        return true;
+        return false;
     }
 
     @Override
     public String doAction(List<String> parameters) {
-        String path = parameters.get(0);
+        String path = inbox + parameters.get(0);
         parameters.remove(0);
         
         FileInputStream fileReader = null;
@@ -35,7 +43,7 @@ public class FTPWrite implements FTPAction {
             }
             return "";
         } catch (IOException ex) {
-            Logger.getLogger(FTPWrite.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FTPNotAdminWrite.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (fileReader != null) {fileReader.close();}

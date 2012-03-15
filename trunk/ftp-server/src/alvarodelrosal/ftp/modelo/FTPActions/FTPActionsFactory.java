@@ -1,6 +1,5 @@
 package alvarodelrosal.ftp.modelo.FTPActions;
 
-import alvarodelrosal.ftp.infraestructura.FTPUsersRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,7 @@ public class FTPActionsFactory {
         actions.add(new FTPLastModified());
         actions.add(new FTPLook());
         actions.add(new FTPNewFolder());
+        actions.add(new FTPNotAdminWrite("/Users/A/Desktop/Inbox/"));
         actions.add(new FTPRead());
         actions.add(new FTPSize());
         actions.add(new FTPUsers());
