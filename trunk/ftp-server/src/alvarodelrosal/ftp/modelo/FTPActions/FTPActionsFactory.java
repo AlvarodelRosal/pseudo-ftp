@@ -7,8 +7,8 @@ public class FTPActionsFactory {
     
     private List<FTPAction> actions = new ArrayList();
     
-    public FTPActionsFactory() {
-        addsAllTheActions();
+    public FTPActionsFactory(String file, String inbox) {
+        addsAllTheActions(file, inbox);
     }
     
     public FTPAction getFTPAction(String actionName) {
@@ -20,12 +20,12 @@ public class FTPActionsFactory {
         return new FTPOops();
     }
     
-    private void addsAllTheActions() {
-        actions.add(new FTPAddUser());
+    private void addsAllTheActions(String file, String inbox) {
+        actions.add(new FTPAddUser(file));
         actions.add(new FTPCanRead());
         actions.add(new FTPCanWrite());
         actions.add(new FTPDelete());
-        actions.add(new FTPDeleteUser());
+        actions.add(new FTPDeleteUser(file));
         actions.add(new FTPHello());
         actions.add(new FTPIsFile());
         actions.add(new FTPIsFolder());
@@ -33,10 +33,10 @@ public class FTPActionsFactory {
         actions.add(new FTPLastModified());
         actions.add(new FTPLook());
         actions.add(new FTPNewFolder());
-        actions.add(new FTPNotAdminWrite("/Users/A/Desktop/Inbox/"));
+        actions.add(new FTPNotAdminWrite(inbox));
         actions.add(new FTPRead());
         actions.add(new FTPSize());
-        actions.add(new FTPUsers());
+        actions.add(new FTPUsers(file));
         actions.add(new FTPWrite());
     }
 }
