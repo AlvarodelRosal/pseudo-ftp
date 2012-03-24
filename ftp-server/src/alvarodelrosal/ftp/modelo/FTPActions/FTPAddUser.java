@@ -6,9 +6,12 @@ import java.util.List;
 
 public class FTPAddUser implements FTPAction {
     
-    private FTPUsersRepository ftpUsersRepository = new FTPUsersRepository();
+    private FTPUsersRepository ftpUsersRepository;
+    private String file;
 
-    public FTPAddUser() {
+    public FTPAddUser(String file) {
+        this.file = file;
+        ftpUsersRepository = new FTPUsersRepository(file);
     }
 
     @Override

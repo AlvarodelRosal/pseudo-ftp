@@ -4,8 +4,14 @@ import alvarodelrosal.ftp.modelo.FTPUser;
 import java.util.List;
 
 public class FTPUsersRepository {
-    
-    private FTPUsersFilePersistence users = new FTPUsersFilePersistence();
+
+    private String file;
+    private FTPUsersFilePersistence users;
+
+    public FTPUsersRepository(String file) {
+        this.file = file;
+        this.users = new FTPUsersFilePersistence(file);
+    }
     
     public boolean exists(String username, String password) {
         return users.existsTheUser(username, password);
@@ -29,7 +35,7 @@ public class FTPUsersRepository {
     
     public void update() {
         users = null;
-        users = new FTPUsersFilePersistence();
+        users = new FTPUsersFilePersistence(file);
     }
     
 }

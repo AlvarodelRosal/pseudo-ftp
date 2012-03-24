@@ -16,10 +16,16 @@ public class FTPConnection extends Thread {
     private Socket client;
     private PrintWriter output;
     private BufferedReader input;
-    private FTPUsersRepository usersRepository = new FTPUsersRepository();
+    private String file;
+    private String inbox;
+    private FTPUsersRepository usersRepository;
     private FTPUser ftpUser = null;
 
-    public FTPConnection(Socket client) {
+    public FTPConnection(Socket client, String file, String inbox) {
+        this.file = file;
+        this.inbox = inbox;
+        this.usersRepository = new FTPUsersRepository(file);
+        
         this.client = client;
 
         try {
@@ -52,7 +58,7 @@ public class FTPConnection extends Thread {
         try {
             String inputRequest = input.readLine();
 
-            FTPActionsFactory inputFactory = new FTPActionsFactory();
+            FTPActionsFactory inputFactory = new FTPActionsFactory(file, inbox);
 
             FTPBye bye = new FTPBye();
 

@@ -11,10 +11,10 @@ public class FTPUsersFilePersistence implements FTPUsersPersistence {
 
     private List<FTPUser> users = new ArrayList();
 
-    public FTPUsersFilePersistence() {
+    public FTPUsersFilePersistence(String file) {
         BufferedReader reader = null;
         try {
-            File usersFile = new File("users.txt");
+            File usersFile = new File(file);
             reader = new BufferedReader(new FileReader(usersFile));
             String line;
             while ((line = reader.readLine()) != null) {

@@ -5,9 +5,12 @@ import java.util.List;
 
 public class FTPDeleteUser implements FTPAction {
     
-    private FTPUsersRepository ftpUsersRepository = new FTPUsersRepository();
+    private FTPUsersRepository ftpUsersRepository;
+    private String file;
 
-    public FTPDeleteUser() {
+    public FTPDeleteUser(String file) {
+        this.file = file;
+        ftpUsersRepository = new FTPUsersRepository(file);
     }
 
     @Override

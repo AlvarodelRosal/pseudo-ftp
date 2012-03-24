@@ -1,3 +1,2 @@
 Alvaro<:@:>adr<:@:>123456<:@:>true
-Admin<:@:>admin<:@:>admin<:@:>true
 User<:@:>user<:@:>123456<:@:>false

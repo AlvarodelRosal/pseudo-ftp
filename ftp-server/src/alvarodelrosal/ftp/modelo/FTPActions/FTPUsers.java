@@ -6,6 +6,12 @@ import java.util.List;
 
 public class FTPUsers implements FTPAction {
 
+    private String file;
+
+    public FTPUsers(String file) {
+        this.file = file;
+    }
+    
     @Override
     public String getName() {
         return "Users";
@@ -19,7 +25,7 @@ public class FTPUsers implements FTPAction {
     @Override
     public String doAction(List<String> parameters) {
         StringBuilder usersBuilder = new StringBuilder();
-        List<FTPUser> users = new FTPUsersRepository().getAllUsers();
+        List<FTPUser> users = new FTPUsersRepository(file).getAllUsers();
         
         for(FTPUser user : users) {
             usersBuilder.append("<:@:>");
