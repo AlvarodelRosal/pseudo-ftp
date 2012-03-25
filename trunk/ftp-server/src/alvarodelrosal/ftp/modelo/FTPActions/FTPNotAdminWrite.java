@@ -28,7 +28,7 @@ public class FTPNotAdminWrite implements FTPAction {
 
     @Override
     public String doAction(List<String> parameters) {
-        String path = inbox + parameters.get(0);
+        String path = inbox + "/" + parameters.get(0);
         parameters.remove(0);
         
         FileInputStream fileReader = null;
